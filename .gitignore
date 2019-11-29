@@ -1,0 +1,14 @@
+# dataset folders and files
+GTSRB/*
+*.zip
+
+# models, weights and logs folders
+output/*
+logs/*
+
+# Python's generated files
+__pycache__
+*.pyc
+
+# 
+.vscode
