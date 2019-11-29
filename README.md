@@ -42,8 +42,23 @@ pip install -r requirements.txt
 Train and test by launching one of the provided model:
 
 ```bash
-python DeepKnowledgeSeville.py
+python dks.py
 ```
+
+## Results
+
+### DeepKnowledgeSeville
+
+<table>
+    <tr>
+        <th>Loss</th>
+        <th>Accuracy</th>
+    </tr>
+    <tr>
+        <td><img src="https://raw.githubusercontent.com/raymas/German-Traffic-Sign-Recognition-Benchmark/master/example-results/DKS/epoch_loss.svg?sanitize=true" width=300></td>
+        <td><img src="https://raw.githubusercontent.com/raymas/German-Traffic-Sign-Recognition-Benchmark/master/example-results/DKS/epoch_acc.svg?sanitize=true" width=300></td>
+    </tr>
+</table>
 
 ## Contributing
 
