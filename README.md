@@ -42,7 +42,13 @@ pip install -r requirements.txt
 Train and test by launching one of the provided model:
 
 ```bash
-python dks.py
+python main.py --model DKS --train
+```
+
+For help:
+
+```bash
+python main.py -h
 ```
 
 ## Results

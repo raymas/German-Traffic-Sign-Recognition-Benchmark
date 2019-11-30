@@ -8,12 +8,13 @@ import pandas
 
 class GTSRB:
 
-    def __init__(self):
+    def __init__(self, program_path):
         """Main class for training set.
         - Able to download training and testing sets
         - Retrieves anotation from attached database csv"""
+        self.program_path = program_path
         self.current_path = os.path.abspath(os.path.dirname(__file__))
-        self.dataset_dir = os.path.join(self.current_path, "GTSRB")
+        self.dataset_dir = os.path.join(program_path, "GTSRB")
 
         train_link, train_filename, train_folder = "https://sid.erda.dk/public/archives/daaeac0d7ce1152aea9b61d9f1e19370/", "GTSRB_Final_Training_Images.zip", "Final_Training"
         test_link, test_filename, test_folder = "https://sid.erda.dk/public/archives/daaeac0d7ce1152aea9b61d9f1e19370/", "GTSRB_Final_Test_Images.zip", "Final_Test"
@@ -41,7 +42,7 @@ class GTSRB:
 
     def getAnnotations(self, folder, target=None):
         """Extract annotations from csv files"""
-        path = os.path.join(os.path.abspath(os.path.dirname(__file__)), "GTSRB", folder)
+        path = os.path.join(self.program_path, "GTSRB", folder)
         for dirpath, dirnames, filenames in os.walk(path, topdown=False):
             for filename in filenames:
                 if filename.endswith('.csv'):
@@ -58,10 +59,10 @@ class GTSRB:
         bIsDownloaded = os.path.isdir(os.path.join(dataset_dir, folder))
         if not bIsDownloaded:
             GTSRB.downloadFile(link, filename)
-            print("Unzipping {}".format(filename))
-
-            with zipfile.ZipFile(os.path.join(os.path.dirname(__file__), filename), 'r') as zip_ref:
-                zip_ref.extractall(os.path.dirname(__file__))
+            downloaded_path = os.path.join(self.program_path, filename)
+            
+            GTSRB.unzip(downloaded_path, self.program_path)
+            os.remove(downloaded_path)
 
         self.getAnnotations(os.path.join(os.path.abspath(dataset_dir), folder))
 
@@ -69,11 +70,12 @@ class GTSRB:
         bIsDownloaded = os.path.isfile(os.path.join(dataset_dir, folder, "Images", filename_extracted))
         if not bIsDownloaded:
             GTSRB.downloadFile(link, filename)
-            downloaded_path = os.path.join(self.current_path, filename)
+            downloaded_path = os.path.join(self.program_path, filename)
 
-            GTSRB.unzip(downloaded_path, self.current_path)
+            GTSRB.unzip(downloaded_path, self.program_path)
+            os.remove(downloaded_path)
 
-            os.rename(os.path.join(self.current_path, filename_extracted), os.path.join(self.test_path, filename_extracted))
+            os.rename(os.path.join(self.program_path, filename_extracted), os.path.join(self.test_path, filename_extracted))
 
     def classTestDataset(self, csv_filename):
         """Create the directory structure for test validator"""
@@ -98,7 +100,7 @@ class GTSRB:
         if not f.closed:
             f.close()
 
-    def showStats(self):
+    def getStats(self):
         pass
 
     @staticmethod
