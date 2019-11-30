@@ -74,4 +74,6 @@ Fork, publish a new branch, add your name to [CONTRIBUTORS.md](CONTRIBUTORS.md)
 
 [GTSRB](http://benchmark.ini.rub.de/) J. Stallkamp, M. Schlipsing, J. Salmen, and C. Igel. The German Traffic Sign Recognition Benchmark: A multi-class classification competition. In Proceedings of the IEEE International Joint Conference on Neural Networks, pages 1453–1460. 2011.
 
-[DeepKnowledge Seville] CNN with 3 Spatial Transformers, DeepKnowledge Seville, Álvaro Arcos-García and Juan A. Álvarez-García and Luis M. Soria-Morillo, [Neural Networks](https://doi.org/10.1016/j.neunet.2018.01.005)
+[DeepKnowledge Seville]() CNN with 3 Spatial Transformers, DeepKnowledge Seville, Álvaro Arcos-García and Juan A. Álvarez-García and Luis M. Soria-Morillo, [Neural Networks](https://doi.org/10.1016/j.neunet.2018.01.005)
+
+[Sermanet](http://yann.lecun.com/exdb/publis/pdf/sermanet-ijcnn-11.pdf) Multi-Scale CNNs, sermanet , Traffic sign recognition with multi-scale Convolutional Networks, Traffic sign recognition with multi-scale Convolutional Networks, P. Sermanet, Y. LeCun, August 2011, [International Joint Conference on Neural Networks (IJCNN) 2011](http://dx.doi.org/10.1109/IJCNN.2011.6033589)

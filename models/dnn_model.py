@@ -41,8 +41,6 @@ class Model:
             color_mode=self.color_mode
         )
 
-        print(train_generator)
-
         # callbacks
         log_path = self.generateLogDir()
         tensorboard = tf.keras.callbacks.TensorBoard(
