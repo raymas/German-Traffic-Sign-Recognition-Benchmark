@@ -2,6 +2,7 @@ import os
 import sys
 import urllib.request
 import zipfile
+import pandas
 
 # from PIL import Image
 
@@ -11,39 +12,50 @@ class GTSRB:
         """Main class for training set.
         - Able to download training and testing sets
         - Retrieves anotation from attached database csv"""
-        base_dir = os.path.join(os.path.dirname(__file__), "GTSRB")
+        self.current_path = os.path.abspath(os.path.dirname(__file__))
+        self.dataset_dir = os.path.join(self.current_path, "GTSRB")
 
         train_link, train_filename, train_folder = "https://sid.erda.dk/public/archives/daaeac0d7ce1152aea9b61d9f1e19370/", "GTSRB_Final_Training_Images.zip", "Final_Training"
         test_link, test_filename, test_folder = "https://sid.erda.dk/public/archives/daaeac0d7ce1152aea9b61d9f1e19370/", "GTSRB_Final_Test_Images.zip", "Final_Test"
         gtd_link, gtd_filename, gtd_extracted = "https://sid.erda.dk/public/archives/daaeac0d7ce1152aea9b61d9f1e19370/", "GTSRB_Final_Test_GT.zip", "GT-final_test.csv"
 
-        bFolderExists = os.path.isdir(base_dir)
+        bFolderExists = os.path.isdir(self.dataset_dir)
         
         self.train_dataset = None
-        self.train_path = os.path.abspath(os.path.join(base_dir, train_folder, "Images"))
+        self.train_path = os.path.abspath(os.path.join(self.dataset_dir, train_folder, "Images"))
 
         self.test_dataset = None
-        self.test_path = os.path.abspath(os.path.join(base_dir, test_folder, "Images"))
+        self.test_path = os.path.abspath(os.path.join(self.dataset_dir, test_folder, "Images"))
 
         self.classNames = []
 
         if not bFolderExists:
-            os.mkdir(base_dir)
+            os.mkdir(self.dataset_dir)
 
-        self.checkForDataset(base_dir, train_folder, train_link, train_filename)
-        self.checkForDataset(base_dir, test_folder, test_link, test_filename)
+        # check and download datatset + extended class ground truth.
+        self.checkForDataset(self.dataset_dir, train_folder, train_link, train_filename)
+        self.checkForDataset(self.dataset_dir, test_folder, test_link, test_filename)
 
-    def getAnnotations(self, folder):
+        self.checkForGroundThruth(self.dataset_dir, test_folder, gtd_link, gtd_filename, gtd_extracted)
+        self.classTestDataset(gtd_extracted)
+
+    def getAnnotations(self, folder, target=None):
         """Extract annotations from csv files"""
         path = os.path.join(os.path.abspath(os.path.dirname(__file__)), "GTSRB", folder)
         for dirpath, dirnames, filenames in os.walk(path, topdown=False):
             for filename in filenames:
                 if filename.endswith('.csv'):
-                    pass
+                    if target is not None:
+                        if filename == target:
+                            df = pandas.read_csv(os.path.join(dirpath, filename), sep=';', quotechar='|')
+                            return df
+                    else:
+                        # pass for now
+                        pass
 
-    def checkForDataset(self, path, folder, link, filename):
+    def checkForDataset(self, dataset_dir, folder, link, filename):
         """Check if dataset is present. If not download and anotates files"""
-        bIsDownloaded = os.path.isdir(os.path.join(path, folder))
+        bIsDownloaded = os.path.isdir(os.path.join(dataset_dir, folder))
         if not bIsDownloaded:
             GTSRB.downloadFile(link, filename)
             print("Unzipping {}".format(filename))
@@ -51,18 +63,32 @@ class GTSRB:
             with zipfile.ZipFile(os.path.join(os.path.dirname(__file__), filename), 'r') as zip_ref:
                 zip_ref.extractall(os.path.dirname(__file__))
 
-        self.getAnnotations(os.path.join(os.path.abspath(path), folder))
+        self.getAnnotations(os.path.join(os.path.abspath(dataset_dir), folder))
 
-    def checkForGroundThruth(self, path, folder, link, filename):
-        bIsDownloaded = os.path.isfile(os.path.join(path, folder))
+    def checkForGroundThruth(self, dataset_dir, folder, link, filename, filename_extracted):
+        bIsDownloaded = os.path.isfile(os.path.join(dataset_dir, folder, "Images", filename_extracted))
         if not bIsDownloaded:
             GTSRB.downloadFile(link, filename)
-            print("Unzipping {}".format(filename))
+            downloaded_path = os.path.join(self.current_path, filename)
 
-            with zipfile.ZipFile(os.path.join(os.path.dirname(__file__), filename), 'r') as zip_ref:
-                zip_ref.extractall(os.path.dirname(__file__))
+            GTSRB.unzip(downloaded_path, self.current_path)
 
-        self.getAnnotations(os.path.join(os.path.abspath(path), folder))        
+            os.rename(os.path.join(self.current_path, filename_extracted), os.path.join(self.test_path, filename_extracted))
+
+    def classTestDataset(self, csv_filename):
+        """Create the directory structure for test validator"""
+        df = self.getAnnotations(self.test_path, csv_filename)
+        nb_of_class = max(df['ClassId']) + 1
+
+        for class_id in range(nb_of_class):
+            dir_path = os.path.join(self.test_path, str(class_id).zfill(5))
+            bDirPresent = os.path.isdir(dir_path)
+
+            if not bDirPresent:
+                os.mkdir(dir_path)
+                associated_images = df[(df['ClassId'] == class_id)]
+                GTSRB.moveImages(associated_images['Filename'], self.test_path, dir_path)
+                
 
     def readClassNames(self):
         file_path = os.path.abspath(os.path.dirname(__file__), "classnames.txt")
@@ -71,6 +97,22 @@ class GTSRB:
             self.classNames = f.readlines().split('\n')
         if not f.closed:
             f.close()
+
+    def showStats(self):
+        pass
+
+    @staticmethod
+    def moveImages(images_list, base_dir, final_dir):
+        """Moving images list from base directory to final directory. Name remains unchanged"""
+        for image in images_list:
+            os.rename(os.path.join(base_dir, image), os.path.join(final_dir, image))
+
+    @staticmethod
+    def unzip(file_path, destination_path):
+        """Unzip a file"""
+        print("Unzipping {}".format(file_path))
+        with zipfile.ZipFile(file_path, 'r') as zip_ref:
+            zip_ref.extractall(destination_path)
 
     @staticmethod
     def downloadFile(link, file_name):

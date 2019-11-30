@@ -72,12 +72,11 @@ class DKS:
 
         # callbacks
         tensorboard = tf.keras.callbacks.TensorBoard(
-            log_dir='./logs/DKS',
+            log_dir=self.generateLogDir('DKS'),
             batch_size=32
         )
         
         early_stop = tf.keras.callbacks.EarlyStopping(
-            # TODO: change the monitor
             monitor='val_loss',
             patience=20
         )
@@ -87,18 +86,20 @@ class DKS:
             generator = train_generator,
             steps_per_epoch = 100,
             epochs = 30,
-            # validation_data = validator_generator,
-            # validation_steps = 50
+            validation_data = validator_generator,
+            validation_steps = 50,
             callbacks = [
                 tensorboard,
                 early_stop
             ]
         )
 
-        out_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "output", "DKS"))
-
+        out_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "output"))
         if not os.path.isdir(out_path):
             os.mkdir(out_path)
+            out_path = os.path.join(out_path, "DKS")
+            if not os.path.isdir(out_path):
+                os.mkdir(out_path)
 
         self.model.save(os.path.join(out_path, "DKS.h5"))
         with open(os.path.join(out_path, "DSK.json"), 'w') as f:
@@ -111,7 +112,15 @@ class DKS:
         if not f.closed:
             f.close()
 
+    def generateLogDir(self, network_name):
+        run_counter = 0
+        run_log_dir = os.path.join(os.path.abspath(os.path.dirname(__file__)), "logs", network_name, "run{}".format(run_counter))
 
+        while os.path.isdir(run_log_dir):
+            run_counter += 1
+            run_log_dir = os.path.join(os.path.abspath(os.path.dirname(__file__)), "logs", network_name, "run{}".format(run_counter))
+
+        return run_log_dir
 
 if __name__ == '__main__':
     dks = DKS(dataset=GTSRB())
