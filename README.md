@@ -76,7 +76,7 @@ After 30 epochs :
     <tr>
         <td><img src="https://raw.githubusercontent.com/raymas/German-Traffic-Sign-Recognition-Benchmark/master/example-results/DKS/epoch_loss.svg?sanitize=true" width=300></td>
         <td><img src="https://raw.githubusercontent.com/raymas/German-Traffic-Sign-Recognition-Benchmark/master/example-results/DKS/epoch_acc.svg?sanitize=true" width=300></td>
-        <td><img src="https://raw.githubusercontent.com/raymas/German-Traffic-Sign-Recognition-Benchmark/master/example-results/DKS/network_dks.png" width=300></td>
+        <!--<td><img src="https://raw.githubusercontent.com/raymas/German-Traffic-Sign-Recognition-Benchmark/master/example-results/DKS/network_dks.png" width=300></td>-->
     </tr>
 </table>
 

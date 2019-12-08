@@ -23,6 +23,8 @@ class Sermanet(Model):
     def build(self):
         """Building the main sermanet model"""
 
+        print("Model still work in progress")
+
         model = tf.keras.Sequential([
             tf.keras.layers.Conv2D(12, (5, 5), input_shape=(self.w, self.h, self.l)),
             tf.keras.layers.MaxPool2D(),
