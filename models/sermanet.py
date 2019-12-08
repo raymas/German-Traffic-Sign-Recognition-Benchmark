@@ -13,9 +13,30 @@ class Sermanet(Model):
         # on rgb for training
         self.color_mode = 'grayscale'
 
+        self.train_idg = tf.keras.preprocessing.image.ImageDataGenerator(
+            rescale=1./255
+        )
+        self.validator_idg = tf.keras.preprocessing.image.ImageDataGenerator(
+            rescale=1./255
+        )
+
     def build(self):
         """Building the main sermanet model"""
 
+        model = tf.keras.Sequential([
+            tf.keras.layers.Conv2D(12, (5, 5), input_shape=(self.w, self.h, self.l)),
+            tf.keras.layers.MaxPool2D(),
+            tf.keras.layers.ReLU(),
+            tf.keras.layers.Conv2D(32, (5, 5), activation='relu'),
+            tf.keras.layers.MaxPool2D(),
+            tf.keras.layers.ReLU(),
+            tf.keras.layers.Flatten(),
+            tf.keras.layers.Dense(240),
+            tf.keras.layers.ReLU(),
+            tf.keras.layers.Dense(43)
+        ])
+
+        """
         input_layer = tf.keras.layers.Input(shape=(self.w, self.h, self.l))
 
         # cnn 1 -> flatten
@@ -54,13 +75,14 @@ class Sermanet(Model):
         output_layer = tf.keras.layers.Dense(43)(dropout_4)
 
         model = tf.keras.Model(inputs=input_layer, outputs=output_layer)
+        """
 
         if self.debug:
             model.summary()
 
         model.compile(
             loss=tf.keras.losses.categorical_crossentropy,
-            optimizer=tf.keras.optimizers.Adam(), 
+            optimizer=tf.keras.optimizers.Adam(0.0005), 
             metrics=['accuracy']
         )
 

@@ -12,14 +12,16 @@ git clone https://github.com/raymas/German-Traffic-Sign-Recognition-Benchmark.gi
 
 Prior training networks, there are prerequisites.
 
-### Docker installation
+### Docker installation (Work in progress)
 
 Simply build using the provided [Dockerfile](Dockerfile):
 
 ```bash
 docker build -t gtsrb-nn .
-docker run -it gtsrb-nn
+docker run -it gtsrb-nn [args]
 ```
+
+See [How to use](#how-to-use) for correct list of arguments. Please note this docker image is using the **GPU** version of tensorflow.
 
 ### Conda environnement
 
@@ -55,6 +57,11 @@ python main.py -h
 
 ### DeepKnowledgeSeville
 
+After 30 epochs :
+
+* Accuracy : ~ 95%
+* Loss : 0.07
+
 <table>
     <tr>
         <th>Loss</th>
@@ -63,6 +70,7 @@ python main.py -h
     <tr>
         <td><img src="https://raw.githubusercontent.com/raymas/German-Traffic-Sign-Recognition-Benchmark/master/example-results/DKS/epoch_loss.svg?sanitize=true" width=300></td>
         <td><img src="https://raw.githubusercontent.com/raymas/German-Traffic-Sign-Recognition-Benchmark/master/example-results/DKS/epoch_acc.svg?sanitize=true" width=300></td>
+        <td><img src="https://raw.githubusercontent.com/raymas/German-Traffic-Sign-Recognition-Benchmark/master/example-results/DKS/network_dks.png" width=300></td>
     </tr>
 </table>
 
