@@ -53,6 +53,12 @@ For help:
 python main.py -h
 ```
 
+With docker :
+
+```bash
+docker run -it gtsrb-nn --model DKS --train
+```
+
 ## Results
 
 ### DeepKnowledgeSeville
