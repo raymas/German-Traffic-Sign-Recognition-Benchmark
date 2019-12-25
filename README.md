@@ -1,6 +1,6 @@
 # German Traffic Sign Recognition Benchmark (GTSRB)
 
-This repository aims to implement networks models from the GTSRB challenge.
+This repository aims to implement classifiers networks models from the [GTSRB challenge](http://benchmark.ini.rub.de/?section=gtsrb&subsection=news).
 
 ## Getting started
 
@@ -62,6 +62,9 @@ docker run -it gtsrb-nn --model DKS --train
 ## Results
 
 ### DeepKnowledgeSeville
+<p align="center">
+    <img src="https://raw.githubusercontent.com/raymas/German-Traffic-Sign-Recognition-Benchmark/master/example-results/DKS/network_dks.png" height="300" />
+</p>
 
 After 30 epochs :
 
@@ -76,9 +79,12 @@ After 30 epochs :
     <tr>
         <td><img src="https://raw.githubusercontent.com/raymas/German-Traffic-Sign-Recognition-Benchmark/master/example-results/DKS/epoch_loss.svg?sanitize=true" width=300></td>
         <td><img src="https://raw.githubusercontent.com/raymas/German-Traffic-Sign-Recognition-Benchmark/master/example-results/DKS/epoch_acc.svg?sanitize=true" width=300></td>
-        <!--<td><img src="https://raw.githubusercontent.com/raymas/German-Traffic-Sign-Recognition-Benchmark/master/example-results/DKS/network_dks.png" width=300></td>-->
     </tr>
 </table>
+
+## TODO
+
+[ ] Spatial extractor.
 
 ## Contributing
 
