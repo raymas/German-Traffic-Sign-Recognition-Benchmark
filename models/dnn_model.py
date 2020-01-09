@@ -1,6 +1,8 @@
 import tensorflow as tf
 import os
 import json
+from PIL import Image
+import numpy as np
 
 
 class Model:
@@ -89,3 +91,52 @@ class Model:
             )
         if not f.closed:
             f.close()
+
+    def loadModel(self, h5_path):
+        self.model = tf.keras.models.load_model(
+            h5_path,
+            custom_objects=None,
+            compile=True
+        )
+
+    def prepareSingleImage(self, image_path):
+        """Convert an image path to a correct numpy array for prediction"""
+        image = Image.open(image_path)
+        image = image.resize((self.w, self.h), Image.ANTIALIAS)
+        image = np.array(image)
+        image.shape = (1, self.w, self.h, self.l)
+        return image
+
+    def predict(self, input_data):
+
+        if isinstance(input_data, str):
+            file_list = None
+            if input_data.endswith(('.jpg', '.ppm', '.bmp', '.tiff', '.png')):
+                file_list = [input_data]
+            elif input_data.endswith(('.csv', '.txt')):
+                with open(input_data, 'r') as f:
+                    file_list = [x for x in f.readlines().split('\n') if x]
+                    print(file_list)
+                if not file_list:
+                    raise ValueError("Error while reading file list")
+
+            for file in file_list:
+                image = self.prepareSingleImage(file)
+                prediction = self.model.predict(image)
+                potential_classes = np.where(np.any(prediction > 0.0, axis=0))
+                confidences_level = prediction[0][potential_classes] * 100.
+                sorted_index = np.argsort(np.sort(confidences_level)[::-1])
+                
+                separator = "{}".format("".join(["-" for _ in range(21 + len(file))]))
+
+                print(separator)
+                print("--- Prediction : {} ---".format(file))
+                if self.dataset.classNames:
+                    for c in sorted_index:
+                        print("[class: {:<50} | confidence: {}%]".format(self.dataset.classNames[potential_classes[0][c]], confidences_level[c]))
+                else:
+                    for c in sorted_index:
+                        print("[class: {:<2} | confidence: {}%]".format(potential_classes[0][c], confidences_level[c]))
+                print(separator)
+
+            

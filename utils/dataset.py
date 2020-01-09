@@ -28,7 +28,7 @@ class GTSRB:
         self.test_dataset = None
         self.test_path = os.path.abspath(os.path.join(self.dataset_dir, test_folder, "Images"))
 
-        self.classNames = []
+        self.classNames = None
 
         if not bFolderExists:
             os.mkdir(self.dataset_dir)
@@ -39,6 +39,7 @@ class GTSRB:
 
         self.checkForGroundThruth(self.dataset_dir, test_folder, gtd_link, gtd_filename, gtd_extracted)
         self.classTestDataset(gtd_extracted)
+        self.readClassNames()
 
     def getAnnotations(self, folder, target=None):
         """Extract annotations from csv files"""
@@ -93,12 +94,14 @@ class GTSRB:
                 
 
     def readClassNames(self):
-        file_path = os.path.abspath(os.path.dirname(__file__), "classnames.txt")
+        file_path = os.path.abspath(os.path.join(self.program_path, "classnames.txt"))
 
         with open(file_path, 'r') as f:
-            self.classNames = f.readlines().split('\n')
+            classNames = f.readlines()
         if not f.closed:
             f.close()
+
+        self.classNames = [c.replace('\n', '') for c in classNames if c]
 
     def getStats(self):
         pass

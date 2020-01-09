@@ -62,6 +62,7 @@ docker run -it gtsrb-nn --model DKS --train
 ## Results
 
 ### DeepKnowledgeSeville
+
 <p align="center">
     <img src="https://raw.githubusercontent.com/raymas/German-Traffic-Sign-Recognition-Benchmark/master/example-results/DKS/network_dks.png" height="300" />
 </p>
@@ -84,7 +85,7 @@ After 30 epochs :
 
 ## TODO
 
-[ ] Spatial extractor.
+* [ ] Spatial extractor.
 
 ## Contributing
 
