@@ -64,7 +64,7 @@ docker run -it gtsrb-nn --model DKS --train
 ### DeepKnowledgeSeville
 
 <p align="center">
-    <img src="https://raw.githubusercontent.com/raymas/German-Traffic-Sign-Recognition-Benchmark/master/example-results/DKS/network_dks.png" height="300" />
+    <img src="https://raw.githubusercontent.com/raymas/German-Traffic-Sign-Recognition-Benchmark/master/example-results/DKS/network_model.svg?sanitize=true" height="600" />
 </p>
 
 After 30 epochs :
