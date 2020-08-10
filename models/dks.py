@@ -1,6 +1,5 @@
 import tensorflow as tf
-from models.dnn_model import Model
-
+from models import Model
 
 class DKS(Model):
     """Deep Knowledge Seville's neural network class"""
@@ -23,7 +22,7 @@ class DKS(Model):
             tf.keras.layers.Dropout(0.2),
             tf.keras.layers.Dense(512, activation='relu'),
             tf.keras.layers.Dense(43, activation='softmax')
-        ])
+        ], name="DKS")
 
         if self.debug:
             model.summary()

@@ -1,8 +1,7 @@
 import tensorflow as tf
 import numpy as np
 
-from models.dnn_model import Model
-
+from models import Model
 
 class Sermanet(Model):
     """Main sermanet class"""
